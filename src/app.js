@@ -14,7 +14,7 @@ app.use(express.json({limit: "16kb"})) //data request via form
 app.use(express.urlencoded({
     extended: true,
     limit: "16kb"
-})) //data came from url
+})) //data came/via through url
 
 app.use(express.static("public"))
 app.use(cookieParser())
