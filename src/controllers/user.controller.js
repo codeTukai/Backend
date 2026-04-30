@@ -34,6 +34,8 @@ const userRegister = asyncHandler(async(req,res)=>{
   console.log(avatar);
   
   const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+  console.log(coverImage);
+  
 
    if (!avatar) {
    throw new ApiError(401, "Avatar is required")
@@ -48,6 +50,9 @@ const userRegister = asyncHandler(async(req,res)=>{
    username: username.toLowerCase()
   })
 
+  console.log(user);
+  
+
   const createdUser = await User.findById(user._id).select(
    "-password -refreshToken"
   )
@@ -56,9 +61,12 @@ const userRegister = asyncHandler(async(req,res)=>{
   }
 
   return res.status(201).json(
-   new ApiError(200, createdUser, "User registered successfully")
+   new ApiResponse(200, createdUser, "User registered successfully")
   )
 })
+
+
+
 
 export {
    userRegister,
