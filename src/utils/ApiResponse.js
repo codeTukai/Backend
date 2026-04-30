@@ -7,4 +7,4 @@ class ApiResponse{
     }
 }
 
-const { ApiResponse }
+export { ApiResponse }
