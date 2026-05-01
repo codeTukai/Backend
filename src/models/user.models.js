@@ -21,9 +21,8 @@ const userSchema = new Schema(
     fullName: {
         type: String,
         required: true,
-        unique: true,
         trim: true,
-        index: true
+       
     },
     avatar: {
         type: String,
@@ -42,7 +41,7 @@ const userSchema = new Schema(
     password: {
         type: String,
         required: [true, 'Password is required'],
-        unique: true
+       
     },
     refreshToken: {
         type: String
