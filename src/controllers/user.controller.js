@@ -32,7 +32,7 @@ const userRegister = asyncHandler( async (req, res) => {
     if (existedUser) {
         throw new ApiError(409, "User with email or username already exists")
     }
-    console.log(req.files);
+    // console.log(req.files);
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
     const coverImageLocalPath = req.files?.coverImage[0]?.path;
@@ -49,7 +49,7 @@ const userRegister = asyncHandler( async (req, res) => {
     }
 
     const avatar = await uploadOnCloudinary(avatarLocalPath)
-    console.log(avatar);
+    // console.log(avatar);
     
     
     if (!avatar) {
@@ -67,6 +67,9 @@ const userRegister = asyncHandler( async (req, res) => {
         password,
         username: username.toLowerCase()
     })
+
+    // console.log(user)
+    
 
     const createdUser = await User.findById(user._id).select(
         "-password -refreshToken"
