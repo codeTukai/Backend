@@ -18,5 +18,5 @@ userRouter.route("/register").post(
     ]),
     userRegister
 )
-
+userRouter.route("/logIn").get("")
 export default userRouter;
