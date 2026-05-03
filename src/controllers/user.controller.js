@@ -5,14 +5,19 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 
 const generateAccessTokenAndRefreshToken = async(userId)=>{
-    const user = await User.findOne(userId)
+   try {
+    const user = await User.findById(userId)
     const accessToken = user.generateAccessToken()
     const refreshToken = user.generateRefreshToken()
 
-    user.refreshToken = refreshToken
-    await user.save({validateBeforeSave: false })
+    user.refreshToken = refreshToken //save into database 
+    await user.save({ validateBeforeSave: false })
 
     return { accessToken, refreshToken }
+
+   } catch (error) {
+    throw new ApiError(500, "Something went wrong while generating refresh and access token")
+   }
 }
 
 const userRegister = asyncHandler( async (req, res) => {
@@ -132,7 +137,7 @@ const userLogin = asyncHandler( async (req, res) => {
 
    //create cookies
    const option = {
-    httpOnly: true,//only modified by server
+    httpOnly: true, //only modified by server by httpOnly method
     secure: true
    }
 
@@ -141,13 +146,15 @@ return res.status(200)
    .cookie("refreshToken", refreshToken, options)
    .json(
     new ApiResponse(200,{
-        user: loggedInUser,accessToken,refreshToken
+        user: loggedInUser, accessToken, refreshToken //optional
     },
     "User logged in successfully"
 
      )
    )
 })
+
+
 
 
 export {
