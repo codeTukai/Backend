@@ -9,6 +9,9 @@ const generateAccessTokenAndRefreshToken = async(userId)=>{
     const user = await User.findById(userId)
     const accessToken = user.generateAccessToken()
     const refreshToken = user.generateRefreshToken()
+    console.log(accessToken);
+    console.log(refreshToken);
+    
 
     user.refreshToken = refreshToken //save into database 
     await user.save({ validateBeforeSave: false })
@@ -111,13 +114,13 @@ const userLogin = asyncHandler( async (req, res) => {
 
     const {email, username, password} = req.body
 
-    if(!email || !username){
+    if((!email && !username)){
         throw new ApiError(400, "email or username is required")
     }
 
     const user = await User.findOne({
          $or: [{email},{username}]
-        
+         
         })
 
     if(!user){
@@ -132,14 +135,17 @@ const userLogin = asyncHandler( async (req, res) => {
     }
    
    const {accessToken, refreshToken} = await generateAccessTokenAndRefreshToken(user._id)
+   console.log(accessToken);
+   
 
    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
    //create cookies
-   const option = {
+   const options = {
     httpOnly: true, //only modified by server by httpOnly method
     secure: true
    }
+// console.log(res);
 
 return res.status(200)
    .cookie("accessToken", accessToken, options)
@@ -167,7 +173,7 @@ const userLoggedOut = await asyncHandler(async(req,res)=>{
            new: true
         }
     )
- const option = {
+ const options = {
     httpOnly: true, 
     secure: true
    }
@@ -178,6 +184,7 @@ const userLoggedOut = await asyncHandler(async(req,res)=>{
    .json(new ApiResponse(200, {}, "User logged out"))
 
 })
+
 
 
 export {
