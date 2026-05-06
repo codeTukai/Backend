@@ -10,8 +10,8 @@ const generateAccessTokenAndRefreshToken = async(userId)=>{
     const user = await User.findById(userId)
     const accessToken = user.generateAccessToken()
     const refreshToken = user.generateRefreshToken()
-    console.log(accessToken);
-    console.log(refreshToken);
+    // console.log(accessToken);
+    // console.log(refreshToken);
     
 
     user.refreshToken = refreshToken //save into database 
@@ -45,6 +45,8 @@ const userRegister = asyncHandler( async (req, res) => {
     const {fullName, email, username, password } = req.body
     //console.log("email: ", email);
     // console.log("fullname: ", fullName);
+    console.log("password", password);
+    
     
 
     if (
@@ -163,7 +165,7 @@ return res.status(200)
    )
 })
 
-const userLoggedOut = await asyncHandler(async(req,res)=>{
+const userLoggedOut =  asyncHandler(async(req,res)=>{
     await User.findByIdAndUpdate(
         req.user._id,
         {
@@ -185,7 +187,7 @@ const userLoggedOut = await asyncHandler(async(req,res)=>{
 
 })
 
-const refreshAccessToken = asyncHandler((req,res)=>{
+const refreshAccessToken = asyncHandler(async(req,res)=>{
     const incomingRefreshToken = req.cookie.refreshToken || req.body.refreshToken
 
     if (!incomingRefreshToken) {
@@ -222,9 +224,58 @@ const refreshAccessToken = asyncHandler((req,res)=>{
     
 })
 
+const updatePassword = asyncHandler(async(req,res)=>{
+    const {oldPassword, setPassword} = req.body
+
+   const user = await User.findById(req.user?._id)
+   const isCorrectPassword = await user.isCorrectPassword(oldPassword)
+
+   if (!isCorrectPassword) {
+    throw new apiError(400, "invalid old password")
+   }
+
+
+    
+   user.password = password
+   user.save({validateBeforeSave: false})
+    
+   return res
+   .status(200)
+   .json(new ApiResponse(200, {}, "password change successfully"))
+})
+
+const getCurrentUser = asyncHandler(async(req,res)=>{
+    return res.status(200)
+          .json(200, req.user, "get current user")
+})
+
+const updateUserAccount = asyncHandler(async (req,res) => {
+    const {fullName , email} = req.body
+    if (!fullName || !email) {
+        throw new apiError(401,"all fields are required" )
+    }
+    const user = await User.findByIdAndUpdate(
+        req.user?._id,
+         {
+            $set: {
+                fullName,
+                email
+            }
+         },
+         {new: true}
+        ).select("-password")
+
+        return res.status(200)
+        .json(new ApiResponse(200, user, "account update successfully"))
+  
+})
+
 export {
    userRegister,
    userLogin,
    userLoggedOut,
-   refreshAccessToken
+   refreshAccessToken,
+   updatePassword,
+   getCurrentUser,
+   updateUserAccount
 }
