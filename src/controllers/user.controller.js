@@ -231,7 +231,7 @@ const updatePassword = asyncHandler(async(req,res)=>{
    const isCorrectPassword = await user.isCorrectPassword(oldPassword)
 
    if (!isCorrectPassword) {
-    throw new apiError(400, "invalid old password")
+    throw new ApiError(400, "invalid old password")
    }
 
 
@@ -270,6 +270,59 @@ const updateUserAccount = asyncHandler(async (req,res) => {
   
 })
 
+const updateUserAvatar = asyncHandle(async(req,res)=>{
+    
+    const avatarLocalPath = req.file?.path
+
+    if (!avatarLocalPath) {
+        throw new ApiError(400, "avatar file needed")
+    }
+
+    const avatar = await uploadOnCloudinary(avatarLocalPath)
+     if (!avatar.url) {
+        throw new ApiError(400, "Error while uploading on avatar")
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.user?._id,
+         {
+            $set: {
+               avatar:avatar.url
+            }
+         },
+         {new: true}
+        ).select("-password")
+
+        return res.status(200).json(new ApiResponse(200, user, "avatar updated successful"))
+   
+})
+
+const updateCoverImage = asyncHandler(async(req,res)=>{
+    const coverImageLocalPath = req.file?.path
+     if (!coverImage) {
+        throw new ApiError(400, "coverImage file needed")
+    }
+
+     const avatar = await uploadOnCloudinary(coverImageLocalPath)
+     if (!avatar.url) {
+        throw new ApiError(400, "Error while uploading on coverImage")
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.user?._id, 
+        {
+            $set:{
+                coverImage: coverImage.url
+        }
+    },
+        {new: true}
+    ).select("-password")
+
+    return res.status(200)
+    .json(new ApiResponse(200, user, "coverImage updated successful"))
+
+})
+
 export {
    userRegister,
    userLogin,
@@ -277,5 +330,7 @@ export {
    refreshAccessToken,
    updatePassword,
    getCurrentUser,
-   updateUserAccount
+   updateUserAccount,
+   updateUserAvatar,
+   updateCoverImage
 }
