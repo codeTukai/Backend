@@ -113,7 +113,7 @@ const userRegister = asyncHandler( async (req, res) => {
         new ApiResponse(200, createdUser, "User registered Successfully")
     )
 
-} )
+})
 
 const userLogin = asyncHandler( async (req, res) => {
     // existence of user ==> if exist then next step with login --> otherwise sign up
@@ -246,7 +246,7 @@ const updatePassword = asyncHandler(async(req,res)=>{
 
 const getCurrentUser = asyncHandler(async(req,res)=>{
     return res.status(200)
-          .json(200, req.user, "get current user")
+          .json(new ApiResponse(200, req.user, "get current user"))
 })
 
 const updateUserAccount = asyncHandler(async (req,res) => {
@@ -322,6 +322,23 @@ const updateCoverImage = asyncHandler(async(req,res)=>{
     .json(new ApiResponse(200, user, "coverImage updated successful"))
 
 })
+
+const getUserChannelProfile = asyncHandler(async(req,res)=>{
+    const {username} = req.param
+
+    if (!username?.trim()) {
+        throw new ApiError(400, "username is missing")
+    }
+
+    const channel = await User.aggregate([
+        {
+            $match:{
+                username: username?.toLowerCase()
+            }
+        }
+    ])
+})
+
 
 export {
    userRegister,
