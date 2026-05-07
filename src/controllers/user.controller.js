@@ -324,16 +324,16 @@ const updateCoverImage = asyncHandler(async(req,res)=>{
 })
 
 const getUserChannelProfile = asyncHandler(async(req,res)=>{
-    const {username} = req.param
+    const {username} = req.param  //user get through url by req.param 
 
     if (!username?.trim()) {
         throw new ApiError(400, "username is missing")
     }
 
-    const channel = await User.aggregate([
+    const channel = await User.aggregate([  // use aggregate method to create stages
         
         {
-            $match:{
+            $match:{   //match the user 
                 username: username?.toLowerCase()
             }, 
         },
@@ -368,7 +368,7 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
                         then: true,
                         else: false
                     },
-                    $project:{
+                    $project:{  //trigger the field thats needed
                         fullName:1,
                         username:1,
                         channelSubscribedCount: 1,
