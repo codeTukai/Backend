@@ -404,7 +404,7 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
                 localField:"watchHistory",
                 foreignField:"_id",
                 as:"watchHistory",
-                pipeline:[ //
+                pipeline:[ //sub-pipeline
                     {
                         $lookup:{
                             from: "users",
@@ -445,6 +445,7 @@ export {
    refreshAccessToken,
    updatePassword,
    getCurrentUser,
+   updateUserAccount,
    updateUserAccount,
    updateUserAvatar,
    updateCoverImage,
