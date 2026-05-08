@@ -6,6 +6,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
 import mongoose from 'mongoose'
 
+//generate refresh token and access token
 const generateAccessTokenAndRefreshToken = async(userId)=>{
    try {
     const user = await User.findById(userId)
@@ -298,6 +299,8 @@ const updateUserAvatar = asyncHandle(async(req,res)=>{
    
 })
 
+//file delete todo
+
 const updateCoverImage = asyncHandler(async(req,res)=>{
     const coverImageLocalPath = req.file?.path
      if (!coverImage) {
@@ -331,7 +334,7 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
         throw new ApiError(400, "username is missing")
     }
 
-    const channel = await User.aggregate([  // use aggregate method to create stages
+    const channel = await User.aggregate([  // use aggregate method to create pipeline
         
         {
             $match:{   //match the user 
