@@ -396,6 +396,7 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
        { $project:{  //trigger the field thats needed
                     fullName:1,
                     username:1,
+                    subscribersCount: 1,
                     channelSubscribedCount: 1,
                     isSubscribed:1,
                     avatar: 1,
