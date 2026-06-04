@@ -70,8 +70,11 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 const publishAVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
-  // TODO: get video, upload to cloudinary, create video
+  // TODO: get video, upload to cloudinary, create video  
 
+  const existingVideo = req.files?.avatar[0].Video
+    
+  if(!existingVideo) return 
   
 });
 
