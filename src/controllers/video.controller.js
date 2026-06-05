@@ -7,11 +7,17 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
+  const {
+    page = 1,
+    limit = 10,
+    query,
+    sortBy,
+    sortType,
+    userId,
+  } = req.query;
 
   const filter = {};
 
-  //search based on title and description
   if (query) {
     filter.$or = [
       {
@@ -33,39 +39,38 @@ const getAllVideos = asyncHandler(async (req, res) => {
     filter.owner = userId;
   }
 
-  //sorting based on asc
-
   const sortOptions = {};
 
-  sortOptions[sortBy] = sortType === "asc" ? 1 : -1;
+  if (sortBy) {
+    sortOptions[sortBy] = sortType === "asc" ? 1 : -1;
+  } else {
+    sortOptions.createdAt = -1;
+  }
 
-  //pagination
+  const pageNumber = Number(page);
+  const limitNumber = Number(limit);
 
-  const skip = (page - 1) * limit;
-
-  //fetch videos
+  const skip = (pageNumber - 1) * limitNumber;
 
   const videos = await Video.find(filter)
     .sort(sortOptions)
     .skip(skip)
-    .limit(Number(limit));
+    .limit(limitNumber);
 
   const totalVideoCount = await Video.countDocuments(filter);
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        {
-          videos,
-          totalVideoCount,
-          currentPage: Number(page),
-          totalPages: Math.ceil(totalVideos / limit),
-        },
-        "Videos fetch successfully"
-      )
-    );
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        videos,
+        totalVideoCount,
+        currentPage: pageNumber,
+        totalPages: Math.ceil(totalVideoCount / limitNumber),
+      },
+      "Videos fetched successfully"
+    )
+  );
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
