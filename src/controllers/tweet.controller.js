@@ -42,6 +42,8 @@ const getUserTweets = asyncHandler(async (req, res) => {
     const tweets = await Tweet.find({ owner: userId })
         .sort({ createdAt: -1 });
 
+        console.log(tweets)
+
     return res.status(200).json(
         new ApiResponse(
             200,
