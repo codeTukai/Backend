@@ -26,6 +26,7 @@ import videosRouter from "./routes/video.routes.js"
 
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/videos", videosRouter)
+app.use("/api/v1/tweets", tweetRouter);
 
 
 
