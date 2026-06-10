@@ -8,7 +8,13 @@ const asyncHandler = (requestHandler) => {
 
 export {asyncHandler}
 
+// const asyncHandler = (fn) => {}
+// const asyncHandler = (func) => { () => { //one function is pass to another function in this case it is a higher order function
 
+// } }
+
+// const asyncHandler = (fn) => () => {} 
+// its meant the curly brasses remove due to return call
 
 // const asyncHandler = (fn) => async (req, res, next) => {
 //      try {
