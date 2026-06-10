@@ -21,6 +21,9 @@ const createTweet = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Failed to create tweet");
     }
 
+    console.log(res);
+    
+
     return res
         .status(201)
         .json(
