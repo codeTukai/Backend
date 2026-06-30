@@ -61,6 +61,8 @@ const userRegister = asyncHandler( async (req, res) => {
         $or: [{ username }, { email }]
     })
 
+    
+
     if (existedUser) {
         throw new ApiError(409, "User with email or username already exists")
     }
@@ -243,7 +245,7 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
 
 
 
-const updatePassword = asyncHandler(async(req,res)=>{
+const updatedCurrentPassword = asyncHandler(async(req,res)=>{
     const {oldPassword, newPassword} = req.body
 
    const user = await User.findById(req.user?._id)
@@ -471,7 +473,7 @@ export {
    userLogin,
    userLoggedOut,
    refreshAccessToken,
-   updatePassword,
+   updatedCurrentPassword,
    getCurrentUser,
    updateUserAccount,
    updateUserAvatar,
