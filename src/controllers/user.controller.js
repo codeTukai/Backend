@@ -370,6 +370,7 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
             
         },
         {
+            
             $lookup: {
                 from: "subscriptions", //get from Subscription model
                 localField: "_id",
@@ -380,14 +381,14 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
         {
             $addFields:{
                 subscribersCount:{
-                    $size: "$subscribers"
+                    $size: "$subscribers" //store in an array element [{},{},{}] -- then count the element
                 },
                 channelSubscribedCount: {
-                    $size: "$subscribedTo"
+                    $size: "$subscribedTo" //array -- same like thats
                 },
-                isSubscribed:{ //pipeline for is users subscribed or not
+                isSubscribed:{ //check whether user is subscribed or not
                     $cond:{
-                        if: {$in: [req.user?._id, "$subscribers.subscriber"]},
+                        if: {$in: [req.user?._id, "$subscribers.subscriber"]}, //subscriber came from subscription model
                         then: true,
                         else: false
                     }
@@ -396,7 +397,8 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
             }
         },
        { 
-        $project:{  //trigger the field thats needed
+        //$project -- which data i want to return / trigger the field thats needed
+        $project:{  
                     fullName:1,
                     username:1,
                     subscribersCount: 1,
