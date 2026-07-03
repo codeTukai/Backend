@@ -356,22 +356,22 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
     const channel = await User.aggregate([  // use aggregate method to create pipeline
         
         {
-            $match:{   //match the user 
+            $match:{   //match the existed user 
                 username: username?.toLowerCase()
             }, 
         },
         {
             $lookup:{
-                from: "subscriptions", //whose are subscribed my channel thats totally
+                from: "subscriptions",//get from Subscription model 
                 localField: "_id",
                 foreignField: "channel",
-                as:"subscribers"
+                as:"subscribers"  ////whose are subscribed my channel thats totally
             },
             
         },
         {
             $lookup: {
-                from: "subscriptions",
+                from: "subscriptions", //get from Subscription model
                 localField: "_id",
                 foreignField: "subscriber",
                 as: "subscribedTo" //whom is subscribed by me 
@@ -395,7 +395,8 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
                 }
             }
         },
-       { $project:{  //trigger the field thats needed
+       { 
+        $project:{  //trigger the field thats needed
                     fullName:1,
                     username:1,
                     subscribersCount: 1,
