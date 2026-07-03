@@ -432,8 +432,8 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
         {
             $lookup:{
                 from: "videos",
-                localField:"watchHistory",
-                foreignField:"_id",
+                localField:"watchHistory", //search 
+                foreignField:"_id", //matching user or log-in user
                 as:"watchHistory",
                 pipeline:[ //sub-pipeline
                     {
