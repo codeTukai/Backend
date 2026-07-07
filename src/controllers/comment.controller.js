@@ -75,7 +75,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
     );
 });
 
-export { getVideoComments };
+
 
 const addComment = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
