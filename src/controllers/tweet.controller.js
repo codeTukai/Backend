@@ -58,10 +58,35 @@ const getUserTweets = asyncHandler(async (req, res) => {
 
 const updateTweet = asyncHandler(async (req, res) => {
     //TODO: update tweet
+
+    const {content} = req.body
+
+    if (!content) {
+        throw new ApiError(404, "content require")
+    }
+
+    const newContent = await Tweet.findByIdAndUpdate(
+        req.user?._id,
+
+        {
+            $set:{
+                content
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+   return res.status(201).json(
+    new ApiResponse(200, newContent, "tweet updated")
+   )
+
 })
 
 const deleteTweet = asyncHandler(async (req, res) => {
     //TODO: delete tweet
+    
 })
 
 export {
