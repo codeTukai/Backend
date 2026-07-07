@@ -3,8 +3,8 @@ import { getUserTweets, createTweet, deleteTweet} from '../controllers/tweet.con
 
 const tweetRouter = Router();
 
-tweetRouter.get("/", getUserTweets);
-tweetRouter.post("/", createTweet);
+tweetRouter.get("/getTweet", getUserTweets);
+tweetRouter.post("/create", createTweet);
 tweetRouter.delete("/:tweetId", deleteTweet);
 
 export default tweetRouter;

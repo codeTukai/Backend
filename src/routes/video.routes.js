@@ -21,4 +21,6 @@ router.route("/").get(getAllVideos).post(upload.fields([
         publishAVideo
     );
 
+router.route("/published").post(publishAVideo)
+
 export default router;
